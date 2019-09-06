@@ -5,6 +5,7 @@ import serial
 import time
 import json
 import re
+import random
 
 wpa_supplicant_conf = "/etc/wpa_supplicant/wpa_supplicant.conf"
 sudo_mode = "sudo "
