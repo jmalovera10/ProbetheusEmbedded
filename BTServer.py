@@ -49,7 +49,6 @@ class SerialComm:
 
 
 def main():
-    shell = ShellWrapper()
     invalidCommand = ['clear', 'head', 'sudo', 'nano', 'touch', 'vim']
     ble_comm = None
     isConnected = False
