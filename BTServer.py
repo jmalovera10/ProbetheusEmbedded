@@ -45,6 +45,7 @@ class SerialComm:
 
     def readExecuteSend(self, ble_line):
         json_object = json.loads(ble_line)
+        print "Random: "+str(random.randint(1,10))
         return True
 
 
