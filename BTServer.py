@@ -48,11 +48,10 @@ class SerialComm:
 
 def main():
     invalidCommand = ['clear', 'head', 'sudo', 'nano', 'touch', 'vim']
-    ble_comm = None
+    ble_comm = SerialComm()
 
     while True:
         try:
-            ble_comm = SerialComm()
             out = ble_comm.read_serial()
             for ble_line in out:
                 print(out)
@@ -70,7 +69,6 @@ def main():
 
         except serial.SerialException:
             print("waiting for connection")
-            ble_comm = None
             time.sleep(1)
 
 
