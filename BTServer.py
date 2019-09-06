@@ -47,7 +47,6 @@ class SerialComm:
 
 
 def main():
-    invalidCommand = ['clear', 'head', 'sudo', 'nano', 'touch', 'vim']
     ble_comm = SerialComm()
 
     while True:
@@ -55,17 +54,7 @@ def main():
             out = ble_comm.read_serial()
             for ble_line in out:
                 print(out)
-                if ble_comm.is_json(ble_line):
-                    ble_comm.readExecuteSend(ble_line)
-                    ble_comm.send_serial("Wifi has been configured")
-                    break
-
-                if ble_comm.isValidCommand(ble_line, invalidCommand):
-                    ble_comm.send_serial(
-                        "command '" + ble_line + "' return nothing ")
-                else:
-                    ble_comm.send_serial(
-                        "command '" + ble_line + "' not support ")
+                ble_comm.send_serial(ble_line)
 
         except serial.SerialException:
             print("waiting for connection")
