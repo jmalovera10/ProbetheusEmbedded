@@ -47,10 +47,11 @@ class SerialComm:
 
 
 def main():
-    ble_comm = SerialComm()
+    ble_comm = None
 
     while True:
         try:
+            ble_comm = SerialComm()
             out = ble_comm.read_serial()
             for ble_line in out:
                 print(out)
@@ -58,6 +59,7 @@ def main():
 
         except serial.SerialException:
             print("waiting for connection")
+            ble_comm = None
             time.sleep(1)
 
 
