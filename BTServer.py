@@ -43,74 +43,9 @@ class SerialComm:
 
         return False
 
-    def readExecuteSend(self, shell, ble_comm, ble_line):
-
+    def readExecuteSend(self, ble_line):
         json_object = json.loads(ble_line)
-        ip_address = ble_comm.wifi_connect(
-            json_object['SSID'], json_object['PWD'])
-        if ip_address == "<Not Set>":
-            print("Fail to connect to Internet")
-            # send back fail to configure wifi
-            callback_message = {'result': "FAIL", 'IP': ip_address}
-            callback_json = json.dumps(callback_message)
-            ble_comm.send_serial(callback_json)
-            return False
-
-        else:
-            # isConnected = True
-            print("connect to Internet! your ip_address: " + ip_address)
-            # send back configure wifi succesfully
-            callback_message = {'result': "SUCCESS", 'IP': ip_address}
-            callback_json = json.dumps(callback_message)
-            ble_comm.send_serial(callback_json)
-
-            return True
-
-    def wifi_connect(self, ssid, psk):
-        # write wifi config to file
-        cmd = ['pirateship', 'wifi', ssid, psk]
-        pirateship_wifi_output = subprocess.check_output(cmd)
-        self.send_serial(pirateship_wifi_output)
-
-        p = subprocess.check_output(['ifconfig', 'wlan0'])
-        ip_address = "<Not Set>"
-
-        for l in out.split('\n'):
-            if l.strip().startswith("inet addr:"):
-                ip_address = l.strip().split(' ')[1].split(':')[1]
-
-        return ip_address
-
-
-class ShellWrapper:
-    def __init__(self):
-        self.ps = subprocess.Popen(
-            ['bash'],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            stdin=subprocess.PIPE)
-
-    def execute_command(self, command):
-        self.ps.stdin.write(command + "\n")
-
-    def get_output(self):
-        timeout = False
-        time_limit = .5
-        lines = []
-        while not timeout:
-            poll_result = select.select(
-                [self.ps.stdout, self.ps.stderr], [], [], time_limit)[0]
-            if len(poll_result):
-
-                for p in poll_result:
-                    lines.append(p.readline())
-            else:
-                timeout = True
-
-        if (len(lines)):
-            return lines
-        else:
-            return None
+        return True
 
 
 def main():
@@ -128,8 +63,7 @@ def main():
                 if ble_comm.is_json(ble_line):
 
                     if not isConnected:
-                        isConnected = ble_comm.readExecuteSend(
-                            shell, ble_comm, ble_line)
+                        isConnected = ble_comm.readExecuteSend(ble_line)
                         break
                     else:
                         ble_comm.send_serial("Wifi has been configured")
