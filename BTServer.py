@@ -7,9 +7,6 @@ import json
 import re
 import random
 
-wpa_supplicant_conf = "/etc/wpa_supplicant/wpa_supplicant.conf"
-sudo_mode = "sudo "
-
 
 class SerialComm:
     def __init__(self):
@@ -47,13 +44,11 @@ class SerialComm:
     def readExecuteSend(self, ble_line):
         json_object = json.loads(ble_line)
         print "Random: " + str(random.randint(1, 10))
-        return True
 
 
 def main():
     invalidCommand = ['clear', 'head', 'sudo', 'nano', 'touch', 'vim']
     ble_comm = None
-    isConnected = False
 
     while True:
         try:
@@ -62,11 +57,9 @@ def main():
             for ble_line in out:
                 print(out)
                 if ble_comm.is_json(ble_line):
-
-                    if not isConnected:
-                        isConnected = ble_comm.readExecuteSend(ble_line)
-                        ble_comm.send_serial("Wifi has been configured")
-                        break
+                    ble_comm.readExecuteSend(ble_line)
+                    ble_comm.send_serial("Wifi has been configured")
+                    break
 
                 if ble_comm.isValidCommand(ble_line, invalidCommand):
                     ble_comm.send_serial(
@@ -78,7 +71,6 @@ def main():
         except serial.SerialException:
             print("waiting for connection")
             ble_comm = None
-            isConnected = False
             time.sleep(1)
 
 
