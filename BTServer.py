@@ -10,13 +10,13 @@ import random
 
 class SerialComm:
     def __init__(self):
-        self.port = serial.Serial("/dev/rfcomm0", baudrate=9600, timeout=1)
+        self.port = serial.Serial("/dev/rfcomm0", baudrate=9600 ,timeout=1)
 
     def read_serial(self):
         return self.port.readline()
 
     def send_serial(self, text):
-        self.port.write(text + str('\n'))
+        self.port.write((text + str('\n')).encode())
 
 
 def main():
