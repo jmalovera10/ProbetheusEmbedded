@@ -46,7 +46,7 @@ class SerialComm:
 
     def readExecuteSend(self, ble_line):
         json_object = json.loads(ble_line)
-        print "Random: "+str(random.randint(1,10))
+        print "Random: " + str(random.randint(1, 10))
         return True
 
 
@@ -65,22 +65,12 @@ def main():
 
                     if not isConnected:
                         isConnected = ble_comm.readExecuteSend(ble_line)
-                        break
-                    else:
                         ble_comm.send_serial("Wifi has been configured")
                         break
 
                 if ble_comm.isValidCommand(ble_line, invalidCommand):
-
-                    shell.execute_command(ble_line)
-                    shell_out = shell.get_output()
-                    if shell_out is not None:
-                        for l in shell_out:
-                            print(l)
-                            ble_comm.send_serial(l)
-                    else:
-                        ble_comm.send_serial(
-                            "command '" + ble_line + "' return nothing ")
+                    ble_comm.send_serial(
+                        "command '" + ble_line + "' return nothing ")
                 else:
                     ble_comm.send_serial(
                         "command '" + ble_line + "' not support ")
