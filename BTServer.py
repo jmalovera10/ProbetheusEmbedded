@@ -71,13 +71,11 @@ def main():
             for ble_line in out:
                 print(out)
                 if ble_comm.is_json(ble_line):
-                    print("IS JSON")
                     message = json.loads(ble_line)
                     state = message['STATE']
                     command = message['COMMAND']
                     manager.change_state(state)
                     manager.manage(command, ble_comm)
-                    ble_comm.send_serial(ble_line)
 
         except serial.SerialException:
             print("waiting for connection")
