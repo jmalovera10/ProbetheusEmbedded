@@ -42,12 +42,16 @@ class StateManager:
     def manage(self, command, ble_comm):
         if self.state == "MEASURE":
             if command == "PH":
+                print("PH SENT")
                 ble_comm.send_serial("PH MEASUREMENT")
             elif command == "DO":
+                print("DO SENT")
                 ble_comm.send_serial("DO MEASUREMENT")
             elif command == "T":
+                print("T SENT")
                 ble_comm.send_serial("T MEASUREMENT")
             elif command == "AC":
+                print("AC SENT")
                 ble_comm.send_serial("AC MEASUREMENT")
 
 
@@ -62,6 +66,7 @@ def main():
             for ble_line in out:
                 print(out)
                 if ble_comm.is_json(ble_line):
+                    print("IS JSON")
                     message = json.loads(ble_line)
                     state = message['STATE']
                     command = message['COMMAND']
