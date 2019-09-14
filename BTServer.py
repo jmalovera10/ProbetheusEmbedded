@@ -58,6 +58,8 @@ class StateManager:
             elif command == "AC":
                 print("AC SENT")
                 ble_comm.send_serial("AC MEASUREMENT")
+            elif command == "BATTERY":
+                ble_comm.send_serial('{"BATTERY":100}')
 
 
 def main():
