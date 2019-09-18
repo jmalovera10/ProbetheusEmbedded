@@ -48,19 +48,19 @@ class StateManager:
         if self.state == "MEASURE":
             if command == "PH":
                 print("PH SENT")
-                ble_comm.send_serial("PH MEASUREMENT")
-            elif command == "DO":
-                print("DO SENT")
-                ble_comm.send_serial("DO MEASUREMENT")
-            elif command == "T":
-                print("T SENT")
-                ble_comm.send_serial("T MEASUREMENT")
-            elif command == "AC":
-                print("AC SENT")
-                ble_comm.send_serial("AC MEASUREMENT")
+                ble_comm.send_serial('{"NAME":"PH","VALUE":6,"UNITS":"N/A"}')
+            elif command == "CONDUCTIVITY":
+                print("CONDUCTIVITY SENT")
+                ble_comm.send_serial('{"NAME":"CONDUCTIVITY","VALUE":100,"UNITS":"mS"}')
+            elif command == "TURBIDITY":
+                print("TURBIDITY SENT")
+                ble_comm.send_serial('{"NAME":"TURBIDITY","VALUE":2,"UNITS":"FTU"}')
+            elif command == "APPARENT_COLOR":
+                print("APPARENT_COLOR SENT")
+                ble_comm.send_serial('{"NAME":"APPARENT_COLOR","VALUE":10,"UNITS":"UPC"}')
             elif command == "BATTERY":
                 print("BATTERY STATUS SENT")
-                ble_comm.send_serial('{"BATTERY":100}')
+                ble_comm.send_serial('{"NAME":"BATTERY","VALUE":100,"UNITS":"%"}')
 
 
 def main():
