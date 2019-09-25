@@ -48,7 +48,7 @@ class StateManager:
         if self.state == "MEASURE":
             if command == "PH":
                 print("PH SENT")
-                ble_comm.send_serial('{"NAME":"PH","VALUE":6,"UNITS":"N/A"}')
+                ble_comm.send_serial('{"NAME":"PH","VALUE":6,"UNITS":""}')
             elif command == "CONDUCTIVITY":
                 print("CONDUCTIVITY SENT")
                 ble_comm.send_serial('{"NAME":"CONDUCTIVITY","VALUE":100,"UNITS":"mS"}')
