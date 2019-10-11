@@ -6,6 +6,7 @@ import time
 import json
 import re
 import random
+import RPi.GPIO as GPIO
 
 
 class SerialComm:
@@ -49,23 +50,58 @@ class StateManager:
             if command == "PH":
                 print("PH SENT")
                 ble_comm.send_serial('{"NAME":"PH","VALUE":6,"UNITS":""}')
-            elif command == "CONDUCTIVITY":
+            elif command == "CONDUCTIVIDAD":
                 print("CONDUCTIVITY SENT")
-                ble_comm.send_serial('{"NAME":"CONDUCTIVITY","VALUE":100,"UNITS":"mS"}')
-            elif command == "TURBIDITY":
+                ble_comm.send_serial('{"NAME":"CONDUCTIVIDAD","VALUE":100,"UNITS":"uS/cm"}')
+            elif command == "TURBIDEZ":
                 print("TURBIDITY SENT")
-                ble_comm.send_serial('{"NAME":"TURBIDITY","VALUE":2,"UNITS":"FTU"}')
-            elif command == "APPARENT_COLOR":
+                ble_comm.send_serial('{"NAME":"TURBIDEZ","VALUE":2,"UNITS":"FTU"}')
+            elif command == "COLOR APARENTE":
                 print("APPARENT_COLOR SENT")
-                ble_comm.send_serial('{"NAME":"APPARENT_COLOR","VALUE":10,"UNITS":"UPC"}')
+                ble_comm.send_serial('{"NAME":"COLOR APARENTE","VALUE":10,"UNITS":"UPC"}')
             elif command == "BATTERY":
                 print("BATTERY STATUS SENT")
                 ble_comm.send_serial('{"NAME":"BATTERY","VALUE":100,"UNITS":"%"}')
 
+class SensorManager:
+    def __init__(self):
+        self.active_indicator = True
+
+
+class IndicatorManager:
+    def __init__(self):
+        self.active_indicator = True
+        self.low_battery_indicator = False
+
+        # Configure the setup for the pins
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(16,GPIO.OUT)
+        GPIO.setup(20,GPIO.OUT)
+
+        # Output the default values for the indicators
+        GPIO.output(16, GPIO.HIGH)
+        GPIO.output(20, GPIO.LOW)
+
+    
+    def set_active_indicator(self, new_state):
+        self.active_indicator = new_state
+        if new_state:
+            GPIO.output(16, GPIO.HIGH)
+        else:
+            GPIO.output(16, GPIO.LOW)
+
+    def set_low_battery_indicator(self, new_state):
+        self.low_battery_indicator = new_state
+        if new_state:
+            GPIO.output(20, GPIO.HIGH)
+        else:
+            GPIO.output(20, GPIO.LOW)
+
 
 def main():
     ble_comm = None
-    manager = StateManager()
+    state_manager = StateManager()
+    indicator_manager = IndicatorManager()
 
     while True:
         try:
@@ -77,8 +113,8 @@ def main():
                     message = json.loads(ble_line)
                     state = message['STATE']
                     command = message['COMMAND']
-                    manager.change_state(state)
-                    manager.manage(command, ble_comm)
+                    state_manager.change_state(state)
+                    state_manager.manage(command, ble_comm)
 
         except serial.SerialException:
             print("waiting for connection")
