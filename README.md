@@ -25,5 +25,5 @@ $ exit
 4. Last, delete the Bluetooth tool from de upper toolbar (this is going to allow us to connect to the probe without the manual verification)
 
 </br></br>
-**(NOTE)**: if the Raspberry Pi was configured correctly the next time you reboot, you will be able to connect to the Bluetooth server with your Probetheus mobile app. 
+**(NOTE)**: if you want to save as much power as possible, be sure that the WiFi is disabled.
 
