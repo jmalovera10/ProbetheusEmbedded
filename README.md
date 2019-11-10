@@ -25,5 +25,5 @@ $ exit
 4. Last, delete the Bluetooth tool from de upper toolbar (this is going to allow us to connect to the probe without the manual verification)
 
 </br></br>
-**(NOTE)**: if you want to save as much power as possible, be sure that the WiFi is disabled.
+**(NOTE)**: if you want to save as much power as possible, disable the WiFi.
 
