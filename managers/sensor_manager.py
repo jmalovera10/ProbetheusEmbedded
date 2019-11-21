@@ -1,6 +1,6 @@
-from sensors.conductivity import ConductivityManager
-from sensors.pH import pHManager
-from sensors.turbidity import TurbidityManager
+from managers.sensors.conductivity import ConductivityManager
+from managers.sensors.pH import pHManager
+from managers.sensors.turbidity import TurbidityManager
 
 
 class SensorManager:
@@ -16,7 +16,7 @@ class SensorManager:
     def process_conductivity_measurement():
         conductivity = ConductivityManager()
         reading = conductivity.make_reading()
-        print reading
+        print(reading)
         return reading
 
     # def process_apparent_color_measurement(self):
