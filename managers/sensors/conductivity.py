@@ -9,7 +9,6 @@ class ConductivityManager:
         try:
             self.serial = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1)
             self.wakeup_device()
-            self.send_command('K,1')
             self.serial.flush()
         except SerialException as e:
             print("Error, ", e)
@@ -20,7 +19,7 @@ class ConductivityManager:
             self.serial.flush()
             return True
         except SerialException as e:
-            print ("Error, ", e)
+            print("Error, ", e)
             return None
 
     def stop_continuous_readings(self):
@@ -35,11 +34,11 @@ class ConductivityManager:
     def make_reading(self):
         try:
             self.send_command('R')
-            time.sleep(2)
+            # time.sleep(2)
             lines = self.read_lines()
             return lines
         except SerialException as e:
-            print ("Error, ", e)
+            print("Error, ", e)
             return None
 
     def sleep_device(self):
@@ -48,7 +47,7 @@ class ConductivityManager:
             self.serial.flush()
             return True
         except SerialException as e:
-            print ("Error, ", e)
+            print("Error, ", e)
             return None
 
     def wakeup_device(self):
@@ -81,6 +80,7 @@ class ConductivityManager:
         return ''.join(line_buffer)
 
     def read_lines(self):
+        '''
         lines = []
         try:
             while True:
@@ -94,3 +94,9 @@ class ConductivityManager:
         except SerialException as e:
             print("Error, ", e)
             return None
+        '''
+        res = self.serial.read(50)
+        if len(res):
+            return res.splitlines()
+        else:
+            return []

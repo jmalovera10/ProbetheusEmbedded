@@ -63,6 +63,8 @@ def main():
             print("waiting for connection")
             ble_comm = None
             time.sleep(1)
+        except KeyError:
+            print('BAD REQUEST')
 
 
 if __name__ == "__main__":
