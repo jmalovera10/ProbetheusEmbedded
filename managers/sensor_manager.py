@@ -16,12 +16,9 @@ class SensorManager:
     def process_conductivity_measurement():
         conductivity = ConductivityManager()
         reading = conductivity.make_reading()
-        print('CONDUCTIVITY: ', reading)
         conductivity.sleep_device()
         return reading
 
-    # def process_apparent_color_measurement(self):
-    # return False
     @staticmethod
     def process_turbidity_measurement():
         turbidity = TurbidityManager()

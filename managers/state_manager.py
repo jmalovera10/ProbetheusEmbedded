@@ -1,7 +1,11 @@
+from . import sensor_manager, battery_manager
+
+
 class StateManager:
-    def __init__(self, sensor_manager):
+    def __init__(self):
         self.state = "IDLE"
-        self.sensor_manager = sensor_manager
+        self.sensor_manager = sensor_manager.SensorManager()
+        self.battery_manager = battery_manager.BatteryManager()
 
     def change_state(self, new_state):
         self.state = new_state
@@ -10,21 +14,18 @@ class StateManager:
         if self.state == "MEASURE":
             if command == "PH":
                 print("PH SENT")
-                self.sensor_manager.process_ph_measurement()
-                ble_comm.send_serial('{"NAME":"PH","VALUE":6,"UNITS":""}')
+                ph = self.sensor_manager.process_ph_measurement()
+                ble_comm.send_serial('{"NAME":"PH","VALUE":%.8f,"UNITS":"%s"}' % (ph[0], ph[1]))
             elif command == "CONDUCTIVIDAD":
                 print("CONDUCTIVITY SENT")
-                self.sensor_manager.process_conductivity_measurement()
-                ble_comm.send_serial('{"NAME":"CONDUCTIVIDAD","VALUE":100,"UNITS":"uS/cm"}')
+                conductivity = self.sensor_manager.process_conductivity_measurement()
+                ble_comm.send_serial(
+                    '{"NAME":"CONDUCTIVIDAD","VALUE":%.8f,"UNITS":"%s"}' % (conductivity[0], conductivity[1]))
             elif command == "TURBIDEZ":
                 print("TURBIDITY SENT")
-                self.sensor_manager.process_turbidity_measurement()
-                ble_comm.send_serial('{"NAME":"TURBIDEZ","VALUE":2,"UNITS":"FTU"}')
+                turbidity = self.sensor_manager.process_turbidity_measurement()
+                ble_comm.send_serial('{"NAME":"TURBIDEZ","VALUE":%.8f,"UNITS":"%s"}' % (turbidity[0], turbidity[1]))
             elif command == "BATTERY":
                 print("BATTERY STATUS SENT")
-                ble_comm.send_serial('{"NAME":"BATTERY","VALUE":100,"UNITS":"%"}')
-            '''
-            elif command == "COLOR APARENTE":
-                print("APPARENT_COLOR SENT")
-                ble_comm.send_serial('{"NAME":"COLOR APARENTE","VALUE":10,"UNITS":"UPC"}')
-            '''
+                battery = self.battery_manager.get_battery_measurement()
+                ble_comm.send_serial('{"NAME":"BATTERY","VALUE":%d,"UNITS":"%s"}' % (battery[0], battery[1]))

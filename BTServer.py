@@ -4,7 +4,6 @@ import time
 import serial
 
 from managers.indicator_manager import IndicatorManager
-from managers.sensor_manager import SensorManager
 from managers.state_manager import StateManager
 
 
@@ -32,7 +31,7 @@ class SerialComm:
             if len(json_object) == 0:
                 return False
 
-        except ValueError as e:
+        except ValueError:
             return False
         return True
 
@@ -40,8 +39,7 @@ class SerialComm:
 def main():
     ble_comm = None
     # Setup managers
-    sensor_manager = SensorManager()
-    state_manager = StateManager(sensor_manager)
+    state_manager = StateManager()
     indicator_manager = IndicatorManager()
     indicator_manager.set_active_indicator(True)
     indicator_manager.set_low_battery_indicator(False)
