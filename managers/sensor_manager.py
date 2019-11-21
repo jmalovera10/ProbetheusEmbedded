@@ -16,7 +16,7 @@ class SensorManager:
     def process_conductivity_measurement():
         conductivity = ConductivityManager()
         reading = conductivity.make_reading()
-        print(reading)
+        conductivity.sleep_device()
         return reading
 
     # def process_apparent_color_measurement(self):

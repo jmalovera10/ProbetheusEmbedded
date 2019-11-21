@@ -1,5 +1,4 @@
 import serial
-import time
 from serial import SerialException
 
 
@@ -9,7 +8,6 @@ class ConductivityManager:
         try:
             self.serial = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1)
             self.wakeup_device()
-            self.serial.flush()
         except SerialException as e:
             print("Error, ", e)
 
@@ -34,7 +32,6 @@ class ConductivityManager:
     def make_reading(self):
         try:
             self.send_command('R')
-            # time.sleep(2)
             lines = self.read_lines()
             return lines
         except SerialException as e:
@@ -44,7 +41,8 @@ class ConductivityManager:
     def sleep_device(self):
         try:
             self.send_command('Sleep')
-            self.serial.flush()
+            response = self.read_lines()
+            print(response)
             return True
         except SerialException as e:
             print("Error, ", e)
@@ -53,7 +51,8 @@ class ConductivityManager:
     def wakeup_device(self):
         try:
             self.send_command('i')
-            self.serial.flush()
+            response = self.read_lines()
+            print(response)
         except SerialException as e:
             print("Error, ", e)
             return None
@@ -66,35 +65,7 @@ class ConductivityManager:
         except SerialException:
             raise
 
-    def read_line(self):
-        lsl = len('\r')
-        line_buffer = []
-        while True:
-            next_char = self.serial.read(1)
-            if next_char == '':
-                break
-            line_buffer.append(next_char)
-            if (len(line_buffer) >= lsl and
-                    line_buffer[-lsl:] == list('\r')):
-                break
-        return ''.join(line_buffer)
-
     def read_lines(self):
-        '''
-        lines = []
-        try:
-            while True:
-                line = self.read_line()
-                if not line:
-                    self.serial.flushInput()
-                    break
-                lines.append(line)
-            return lines
-
-        except SerialException as e:
-            print("Error, ", e)
-            return None
-        '''
         res = self.serial.read(50)
         if len(res):
             return res.splitlines()
