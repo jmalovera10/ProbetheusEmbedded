@@ -1,4 +1,5 @@
 import serial
+import time
 from serial import SerialException
 
 
@@ -34,6 +35,7 @@ class ConductivityManager:
     def make_reading(self):
         try:
             self.send_command('R')
+            time.sleep(2)
             lines = self.read_lines()
             return lines
         except SerialException as e:
