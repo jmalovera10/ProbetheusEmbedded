@@ -54,7 +54,7 @@ class ConductivityManager:
             self.send_command('i')
             self.serial.flush()
         except SerialException as e:
-            print ("Error, ", e)
+            print("Error, ", e)
             return None
 
     def send_command(self, command):

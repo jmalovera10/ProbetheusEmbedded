@@ -11,10 +11,10 @@ class BatteryManager:
         # Create the ADC object using the I2C bus
         ads = ADS.ADS1115(i2c)
         # Create single-ended input on channel 1 for battery
-        self.battery = AnalogIn(ads, ADS.P1)
+        self.battery = AnalogIn(ads, ADS.P0)
         self.battery_value = None
 
     def get_battery_measurement(self):
         voltage = self.battery.voltage
-        self.battery_value = ((voltage - 2.7)*100.0)/1.5
+        self.battery_value = ((voltage - 0.51) * 100.0) / 0.76
         return self.battery_value, "%"
