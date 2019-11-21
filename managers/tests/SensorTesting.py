@@ -1,9 +1,9 @@
 import time
 
-from managers.sensor_manager import SensorManager
+from .. import sensor_manager
 
 if __name__ == '__main__':
-    manager = SensorManager()
+    manager = sensor_manager.SensorManager()
     try:
         while True:
             print('pH: ', manager.process_ph_measurement())

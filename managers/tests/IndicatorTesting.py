@@ -1,9 +1,9 @@
 import time
 
-from managers.indicator_manager import IndicatorManager
+from .. import indicator_manager
 
 if __name__ == '__main__':
-    manager = IndicatorManager()
+    manager = indicator_manager.IndicatorManager()
     try:
         battery_indicator = True
         active_indicator = False

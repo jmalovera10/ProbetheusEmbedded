@@ -1,9 +1,9 @@
 import time
 
-from managers.battery_manager import BatteryManager
+from .. import battery_manager
 
 if __name__ == '__main__':
-    manager = BatteryManager()
+    manager = battery_manager.BatteryManager()
     try:
         while True:
             print('BATTERY LEVEL: ', manager.get_battery_measurement())
