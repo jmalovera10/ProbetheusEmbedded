@@ -16,6 +16,7 @@ class SensorManager:
     def process_conductivity_measurement():
         conductivity = ConductivityManager()
         reading = conductivity.make_reading()
+        print('CONDUCTIVITY: ', reading)
         conductivity.sleep_device()
         return reading
 

@@ -42,7 +42,7 @@ class ConductivityManager:
         try:
             self.send_command('Sleep')
             response = self.read_lines()
-            print(response)
+            print('SLEEP: ', response)
             return True
         except SerialException as e:
             print("Error, ", e)
@@ -52,7 +52,7 @@ class ConductivityManager:
         try:
             self.send_command('i')
             response = self.read_lines()
-            print(response)
+            print('WAKEUP: ', response)
         except SerialException as e:
             print("Error, ", e)
             return None
