@@ -33,7 +33,7 @@ class ConductivityManager:
         try:
             self.send_command('R')
             lines = self.read_lines()
-            return lines[0], 'uS/cm'
+            return float(lines[0]), 'uS/cm'
         except SerialException as e:
             print("Error, ", e)
             return None
