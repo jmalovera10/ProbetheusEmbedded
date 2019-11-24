@@ -20,7 +20,8 @@ class SerialComm:
             return []
 
     def send_serial(self, text):
-        self.port.write((text + str('\r\n')).encode())
+        value = (text + str('\r\n')).encode()
+        self.port.write(value)
 
     def is_json(self, mJson):
         try:
