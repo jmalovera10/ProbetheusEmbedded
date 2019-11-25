@@ -1,5 +1,6 @@
 import json
 import time
+import threading
 
 import serial
 
@@ -37,17 +38,37 @@ class SerialComm:
         return True
 
 
+class StateThread(threading.Thread):
+    def __init__(self, state_manager, ble_comm):
+        threading.Thread.__init__(self)
+        self.state_manager = state_manager
+        self.ble_comm = ble_comm
+        self.lock = threading.Lock()
+
+    def change_state(self, state, command):
+        self.lock.acquire()
+        self.state_manager.change_state(state, command)
+        self.lock.release()
+
+    def run(self):
+        while True:
+            self.state_manager.manage(self.ble_comm, self.lock)
+            time.sleep(0.1)
+
+
 def main():
-    ble_comm = None
+    ble_comm = SerialComm()
     # Setup managers
     state_manager = StateManager()
     indicator_manager = IndicatorManager()
     indicator_manager.set_active_indicator(True)
     indicator_manager.set_low_battery_indicator(False)
 
+    state_thread = StateThread(state_manager,ble_comm)
+    state_thread.start()
+
     while True:
         try:
-            ble_comm = SerialComm()
             out = ble_comm.read_serial()
             for ble_line in out:
                 print(out)
@@ -55,13 +76,11 @@ def main():
                     message = json.loads(ble_line)
                     state = message['STATE']
                     command = message['COMMAND']
-                    state_manager.change_state(state)
-                    state_manager.manage(command, ble_comm)
+                    state_thread.change_state(state, command)
 
         except serial.SerialException:
             print("waiting for connection")
-            ble_comm = None
-            time.sleep(1)
+            time.sleep(0.5)
         except KeyError:
             print('BAD REQUEST')
 
