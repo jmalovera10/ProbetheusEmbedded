@@ -48,11 +48,13 @@ class StateThread(threading.Thread):
     def change_state(self, state, command):
         self.lock.acquire()
         self.state_manager.change_state(state, command)
-        self.lock.release()
+        self.lock.acquire()
 
     def run(self):
         while True:
-            self.state_manager.manage(self.ble_comm, self.lock)
+            self.lock.acquire()
+            self.state_manager.manage(self.ble_comm)
+            self.lock.acquire()
             time.sleep(0.1)
 
 
@@ -64,7 +66,7 @@ def main():
     indicator_manager.set_active_indicator(True)
     indicator_manager.set_low_battery_indicator(False)
 
-    state_thread = StateThread(state_manager,ble_comm)
+    state_thread = StateThread(state_manager, ble_comm)
     state_thread.start()
 
     while True:
