@@ -12,10 +12,17 @@ class TurbidityManager:
         # Create the ADC object using the I2C bus
         ads = ADS.ADS1115(i2c)
         # Create single-ended input on channel 1 for turbidity
-        self.turbidity = AnalogIn(ads, ADS.P2)
+        self.turbidity_angle1 = AnalogIn(ads, ADS.P2)
+        self.turbidity_angle2 = AnalogIn(ads, ADS.P2)
         self.turbidity_value = None
 
     def get_turbidity_measurement(self):
-        voltage = self.turbidity.voltage
-        self.turbidity_value = (-5.6548 * voltage) + 15.509
+        turbidity_angle1 = 0
+        turbidity_angle2 = 0
+        for i in range(10):
+            voltage_angle1 = self.turbidity_angle1.voltage
+            turbidity_angle1 += (-5.6548 * voltage_angle1) + 15.509
+            voltage_angle2 = self.turbidity_angle2.voltage
+            turbidity_angle2 += (-5.6548 * voltage_angle2) + 15.509
+        self.turbidity_value = (turbidity_angle1 + turbidity_angle2) / 20
         return self.turbidity_value, "NTU"
