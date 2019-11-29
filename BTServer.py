@@ -85,8 +85,6 @@ def main():
             time.sleep(0.5)
         except KeyError:
             print('BAD REQUEST')
-        finally:
-            indicator_manager.active_indicator(False)
 
 
 if __name__ == "__main__":
