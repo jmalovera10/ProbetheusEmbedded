@@ -12,10 +12,13 @@ class pHManager:
         # Create the ADC object using the I2C bus
         ads = ADS.ADS1115(i2c)
         # Create single-ended input on channel 0 for pH
-        self.pHSensor = AnalogIn(ads, ADS.P0)
+        self.pHSensor = AnalogIn(ads, ADS.P3)
         self.pH_value = None
 
     def get_ph_measurement(self):
-        voltage = self.pHSensor.voltage
-        self.pH_value = (-5.6548 * voltage) + 15.509
+        self.pH_value = 0
+        for i in range(10):
+           voltage = self.pHSensor.voltage
+           self.pH_value += (-5.6548 * voltage) + 15.509
+        self.pH_value /= 10
         return self.pH_value, ""

@@ -34,12 +34,13 @@ class TurbidityManager:
             # First perspective measurement
             GPIO.output(27, GPIO.HIGH)
             voltage_angle1 = self.turbidity_angle1.voltage
-            turbidity_angle1 += (-594.887612 * voltage_angle1) + 2525.903701
+            turbidity_angle1 += voltage_angle1
+            # turbidity_angle1 += (-594.887612 * voltage_angle1) + 2525.903701
             GPIO.output(27, GPIO.LOW)
             # Second perspective measurement
-            GPIO.output(17, GPIO.HIGH)
-            voltage_angle2 = self.turbidity_angle2.voltage
-            turbidity_angle2 += (-594.887612 * voltage_angle2) + 2525.903701
-            GPIO.output(17, GPIO.LOW)
-        self.turbidity_value = (turbidity_angle1 + turbidity_angle2) / 20
+            #GPIO.output(17, GPIO.HIGH)
+            #voltage_angle2 = self.turbidity_angle2.voltage
+            #turbidity_angle2 += (-594.887612 * voltage_angle2) + 2525.903701
+            #GPIO.output(17, GPIO.LOW)
+        self.turbidity_value = (turbidity_angle1) / 10
         return self.turbidity_value, "NTU"

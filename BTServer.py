@@ -48,13 +48,13 @@ class StateThread(threading.Thread):
     def change_state(self, state, command):
         self.lock.acquire()
         self.state_manager.change_state(state, command)
-        self.lock.acquire()
+        self.lock.release()
 
     def run(self):
         while True:
             self.lock.acquire()
             self.state_manager.manage(self.ble_comm)
-            self.lock.acquire()
+            self.lock.release()
             time.sleep(0.1)
 
 
