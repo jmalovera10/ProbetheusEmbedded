@@ -16,9 +16,9 @@ class BatteryManager:
 
     def get_battery_measurement(self):
         accumulator = 0
-        for i in range(10):
+        for i in range(20):
             voltage = self.battery.voltage
             print(voltage)
             accumulator += ((voltage - 2.8) * 100.0) / 1.4
-        self.battery_value = accumulator / 10
+        self.battery_value = accumulator / 20
         return self.battery_value, "%"
