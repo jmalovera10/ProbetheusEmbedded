@@ -16,6 +16,6 @@ class BatteryManager:
 
     def get_battery_measurement(self):
         voltage = self.battery.voltage
-        print(voltage)
-        self.battery_value = ((voltage - 0.51) * 100.0) / 0.25
+        self.battery_value = voltage
+        # self.battery_value = ((voltage - 0.51) * 100.0) / 0.25
         return self.battery_value, "%"
