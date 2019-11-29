@@ -21,8 +21,8 @@ class TurbidityManager:
         turbidity_angle2 = 0
         for i in range(10):
             voltage_angle1 = self.turbidity_angle1.voltage
-            turbidity_angle1 += (-5.6548 * voltage_angle1) + 15.509
+            turbidity_angle1 += (-594.887612 * voltage_angle1) + 2525.903701
             voltage_angle2 = self.turbidity_angle2.voltage
-            turbidity_angle2 += (-5.6548 * voltage_angle2) + 15.509
+            turbidity_angle2 += (-594.887612 * voltage_angle2) + 2525.903701
         self.turbidity_value = (turbidity_angle1 + turbidity_angle2) / 20
         return self.turbidity_value, "NTU"
