@@ -17,8 +17,8 @@ class pHManager:
 
     def get_ph_measurement(self):
         self.pH_value = 0
-        for i in range(10):
+        for i in range(20):
            voltage = self.pHSensor.voltage
            self.pH_value += (-5.6548 * voltage) + 15.509
-        self.pH_value /= 10
+        self.pH_value /= 20
         return self.pH_value, ""
