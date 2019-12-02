@@ -62,9 +62,9 @@ def main():
     ble_comm = SerialComm()
     # Setup managers
     state_manager = StateManager()
-    indicator_manager = IndicatorManager()
-    indicator_manager.set_active_indicator(True)
-    indicator_manager.set_low_battery_indicator(False)
+    # indicator_manager = IndicatorManager()
+    # indicator_manager.set_active_indicator(True)
+    # indicator_manager.set_low_battery_indicator(False)
 
     state_thread = StateThread(state_manager, ble_comm)
     state_thread.start()
