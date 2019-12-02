@@ -43,5 +43,5 @@ class TurbidityManager:
             # turbidity_angle2 += voltage_angle2
             turbidity_angle2 += (-25346.15385 * voltage_angle2) + 97276.36154
             GPIO.output(17, GPIO.LOW)
-        self.turbidity_value = (turbidity_angle2) / 20
+        self.turbidity_value = turbidity_angle2 / 20
         return self.turbidity_value, "NTU"
