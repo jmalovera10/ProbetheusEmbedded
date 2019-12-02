@@ -2,11 +2,11 @@ from . import sensor_manager, battery_manager
 
 
 class StateManager:
-    def __init__(self):
+    def __init__(self, indicator_manager):
         self.state = "IDLE"
         self.command = "EMPTY"
         self.sensor_manager = sensor_manager.SensorManager()
-        self.battery_manager = battery_manager.BatteryManager()
+        self.battery_manager = battery_manager.BatteryManager(indicator_manager)
 
     def change_state(self, new_state, command):
         self.state = new_state
