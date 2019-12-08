@@ -23,10 +23,10 @@ class StateManager:
                 conductivity = self.sensor_manager.process_conductivity_measurement()
                 ble_comm.send_serial(
                     '{"NAME":"CONDUCTIVIDAD","VALUE":%.3f,"UNITS":"%s"}' % (conductivity[0], conductivity[1]))
-            elif self.command == "TURBIDEZ":
+            elif self.command == "TURBIEDAD":
                 print("TURBIDITY SENT")
                 turbidity = self.sensor_manager.process_turbidity_measurement()
-                ble_comm.send_serial('{"NAME":"TURBIDEZ","VALUE":%.3f,"UNITS":"%s"}' % (turbidity[0], turbidity[1]))
+                ble_comm.send_serial('{"NAME":"TURBIEDAD","VALUE":%.3f,"UNITS":"%s"}' % (turbidity[0], turbidity[1]))
             elif self.command == "BATTERY":
                 print("BATTERY STATUS SENT")
                 battery = self.battery_manager.get_battery_measurement()
