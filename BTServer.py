@@ -22,6 +22,7 @@ def is_json(mJson):
         return False
     return True
 
+
 class SerialComm:
     def __init__(self):
         self.port = serial.Serial("/dev/rfcomm0", baudrate=9600, timeout=1)
@@ -63,8 +64,8 @@ class StateThread(threading.Thread):
 
 
 def main():
-    #Setup BT
-    #le_comm = SerialComm()
+    # Setup BT
+    # le_comm = SerialComm()
     server_sock = BluetoothSocket(RFCOMM)
     server_sock.bind(("", PORT_ANY))
     server_sock.listen(1)
@@ -95,8 +96,10 @@ def main():
 
     while True:
         try:
-            #out = ble_comm.read_serial()
+            # out = ble_comm.read_serial()
             data = client_sock.recv(1024)
+            if len(data) == 0:
+                raise btcommon.BluetoothError
             if is_json(data):
                 print(data)
                 message = json.loads(data)
