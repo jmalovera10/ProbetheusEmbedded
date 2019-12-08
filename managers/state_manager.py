@@ -1,4 +1,5 @@
 from . import sensor_manager, battery_manager
+from bluetooth import *
 
 
 class StateManager:
