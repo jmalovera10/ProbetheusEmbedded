@@ -14,10 +14,10 @@ class StateManager:
 
     def manage(self, ble_comm):
         if self.state == "MEASURE":
-            if self.command == "PH":
+            if self.command == "pH":
                 print("PH SENT")
                 ph = self.sensor_manager.process_ph_measurement()
-                ble_comm.send_serial('{"NAME":"PH","VALUE":%.3f,"UNITS":"%s"}' % (ph[0], ph[1]))
+                ble_comm.send_serial('{"NAME":"pH","VALUE":%.3f,"UNITS":"%s"}' % (ph[0], ph[1]))
             elif self.command == "CONDUCTIVIDAD":
                 print("CONDUCTIVITY SENT")
                 conductivity = self.sensor_manager.process_conductivity_measurement()
