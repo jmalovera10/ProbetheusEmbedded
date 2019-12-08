@@ -90,12 +90,12 @@ def main():
 
     state_thread = StateThread(state_manager)
     state_thread.start()
+    client_sock, client_info = server_sock.accept()
+    state_thread.set_ble_comm(client_sock)
 
     while True:
         try:
             #out = ble_comm.read_serial()
-            client_sock, client_info = server_sock.accept()
-            state_thread.set_ble_comm(client_sock)
             data = client_sock.recv(1024)
             if is_json(data):
                 message = json.loads(data)
@@ -115,6 +115,8 @@ def main():
         except serial.SerialException:
             print("waiting for connection")
             time.sleep(0.5)
+        except btcommon.BluetoothError:
+            client_sock, client_info = server_sock.accept()
         except KeyError:
             print('BAD REQUEST')
 
