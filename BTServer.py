@@ -84,13 +84,13 @@ def main():
 
     # Setup managers
     indicator_manager = IndicatorManager()
-    indicator_manager.set_active_indicator(True)
     indicator_manager.set_low_battery_indicator(False)
     state_manager = StateManager(indicator_manager)
 
     state_thread = StateThread(state_manager)
     state_thread.start()
     client_sock, client_info = server_sock.accept()
+    indicator_manager.set_active_indicator(True)
     state_thread.set_ble_comm(client_sock)
 
     while True:
@@ -117,8 +117,10 @@ def main():
             print("waiting for connection")
             time.sleep(0.5)
         except btcommon.BluetoothError:
+            indicator_manager.set_active_indicator(False)
             client_sock, client_info = server_sock.accept()
             state_thread.set_ble_comm(client_sock)
+            indicator_manager.set_active_indicator(True)
         except KeyError:
             print('BAD REQUEST')
 
