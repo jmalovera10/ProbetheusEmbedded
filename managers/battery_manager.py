@@ -19,7 +19,6 @@ class BatteryManager:
         accumulator = 0
         for i in range(20):
             voltage = self.battery.voltage
-            print(voltage)
             accumulator += ((voltage - 2.9) * 100.0) / (4.18 - 2.9)
         self.battery_value = accumulator / 20
         if self.battery_value < 20:
