@@ -100,6 +100,7 @@ def main():
             data = client_sock.recv(1024)
             if len(data) == 0:
                 raise btcommon.BluetoothError
+            print('INCOMING RAW DATA: ', data)
             if is_json(data):
                 print(data)
                 message = json.loads(data)
@@ -120,6 +121,7 @@ def main():
             print("waiting for connection")
             time.sleep(0.5)
         except btcommon.BluetoothError:
+            print('CONNECTION TERMINATED')
             indicator_manager.set_active_indicator(False)
             client_sock, client_info = server_sock.accept()
             state_thread.set_ble_comm(client_sock)
