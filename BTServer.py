@@ -3,10 +3,24 @@ import time
 import threading
 
 import serial
+from bluetooth import *
 
 from managers.indicator_manager import IndicatorManager
 from managers.state_manager import StateManager
 
+
+def is_json(mJson):
+    try:
+        json_object = json.loads(mJson)
+        if isinstance(json_object, int):
+            return False
+
+        if len(json_object) == 0:
+            return False
+
+    except ValueError:
+        return False
+    return True
 
 class SerialComm:
     def __init__(self):
@@ -24,26 +38,16 @@ class SerialComm:
         value = (text + str('\r\n')).encode()
         self.port.write(value)
 
-    def is_json(self, mJson):
-        try:
-            json_object = json.loads(mJson)
-            if isinstance(json_object, int):
-                return False
-
-            if len(json_object) == 0:
-                return False
-
-        except ValueError:
-            return False
-        return True
-
 
 class StateThread(threading.Thread):
-    def __init__(self, state_manager, ble_comm):
+    def __init__(self, state_manager):
         threading.Thread.__init__(self)
         self.state_manager = state_manager
-        self.ble_comm = ble_comm
+        self.ble_comm = None
         self.lock = threading.Lock()
+
+    def set_ble_comm(self, ble_comm):
+        self.ble_comm = ble_comm
 
     def change_state(self, state, command):
         self.lock.acquire()
@@ -59,19 +63,46 @@ class StateThread(threading.Thread):
 
 
 def main():
-    ble_comm = SerialComm()
+    #Setup BT
+    #le_comm = SerialComm()
+    server_sock = BluetoothSocket(RFCOMM)
+    server_sock.bind(("", PORT_ANY))
+    server_sock.listen(1)
+
+    port = server_sock.getsockname()[1]
+
+    uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
+
+    advertise_service(server_sock, "SampleServer",
+                      service_id=uuid,
+                      service_classes=[uuid, SERIAL_PORT_CLASS],
+                      profiles=[SERIAL_PORT_PROFILE],
+                      #                   protocols = [ OBEX_UUID ]
+                      )
+
+    print("Waiting for connection on RFCOMM channel %d" % port)
+
     # Setup managers
     indicator_manager = IndicatorManager()
     indicator_manager.set_active_indicator(True)
     indicator_manager.set_low_battery_indicator(False)
     state_manager = StateManager(indicator_manager)
 
-    state_thread = StateThread(state_manager, ble_comm)
+    state_thread = StateThread(state_manager)
     state_thread.start()
 
     while True:
         try:
-            out = ble_comm.read_serial()
+            #out = ble_comm.read_serial()
+            client_sock, client_info = server_sock.accept()
+            state_thread.set_ble_comm(client_sock)
+            data = client_sock.recv(1024)
+            if is_json(data):
+                message = json.loads(data)
+                state = message['STATE']
+                command = message['COMMAND']
+                state_thread.change_state(state, command)
+            '''
             for ble_line in out:
                 print(out)
                 if ble_comm.is_json(ble_line):
@@ -79,6 +110,7 @@ def main():
                     state = message['STATE']
                     command = message['COMMAND']
                     state_thread.change_state(state, command)
+            '''
 
         except serial.SerialException:
             print("waiting for connection")
