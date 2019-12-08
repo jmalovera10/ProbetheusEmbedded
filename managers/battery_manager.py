@@ -20,7 +20,7 @@ class BatteryManager:
         for i in range(20):
             voltage = self.battery.voltage
             print(voltage)
-            accumulator += ((voltage - 2.9) * 100.0) / (4.2 - 2.9)
+            accumulator += ((voltage - 2.9) * 100.0) / (4.18 - 2.9)
         self.battery_value = accumulator / 20
         if self.battery_value < 20:
             self.indicator_manager.set_low_battery_indicator(True)

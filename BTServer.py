@@ -39,11 +39,14 @@ class SerialComm:
 
 
 class StateThread(threading.Thread):
-    def __init__(self, state_manager, ble_comm):
+    def __init__(self, state_manager):
         threading.Thread.__init__(self)
         self.state_manager = state_manager
-        self.ble_comm = ble_comm
+        self.ble_comm = None
         self.lock = threading.Lock()
+
+    def set_ble_comm(self, ble_comm):
+        self.ble_comm = ble_comm
 
     def change_state(self, state, command):
         self.lock.acquire()
@@ -52,25 +55,30 @@ class StateThread(threading.Thread):
 
     def run(self):
         while True:
-            self.lock.acquire()
-            self.state_manager.manage(self.ble_comm)
-            self.lock.release()
-            time.sleep(0.1)
+            try:
+                self.lock.acquire()
+                self.state_manager.manage(self.ble_comm)
+                self.lock.release()
+                time.sleep(0.1)
+            except serial.SerialException:
+                print('Serial error, no active connection')
 
 
 def main():
-    ble_comm = SerialComm()
+    # ble_comm = SerialComm()
     # Setup managers
     indicator_manager = IndicatorManager()
     indicator_manager.set_active_indicator(True)
     indicator_manager.set_low_battery_indicator(False)
     state_manager = StateManager(indicator_manager)
 
-    state_thread = StateThread(state_manager, ble_comm)
+    state_thread = StateThread(state_manager)
     state_thread.start()
 
     while True:
         try:
+            ble_comm = SerialComm()
+            state_thread.set_ble_comm(ble_comm)
             out = ble_comm.read_serial()
             for ble_line in out:
                 print(out)
@@ -81,6 +89,7 @@ def main():
                     state_thread.change_state(state, command)
 
         except serial.SerialException:
+            state_thread.set_ble_comm(None)
             print("waiting for connection")
             time.sleep(0.5)
         except KeyError:
